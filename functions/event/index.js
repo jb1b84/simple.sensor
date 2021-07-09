@@ -1,9 +1,18 @@
 // Endpoint for receiving incoming events
 
 exports.event = (req, res) => {
-  let message =
-    req.query.message || req.body.message || 'Hello World! This is a function';
-  res.status(200).send(message);
+  console.log(req.body);
+  let schema = req.body.schema;
+  console.log('Event schema is ', schema);
+
+  const sensors = req.body.sensors;
+  sensors.forEach((sensor) => {
+    console.log(sensor.label + ' = ' + sensor.reading + sensor.UoM);
+  });
+
+  // stash into recent readings
+
+  res.status(200).send('Hello!');
 };
 
 // Validate the data

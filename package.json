@@ -12,5 +12,6 @@
   "dependencies": {
     "@google-cloud/firestore": "^4.12.3",
     "dotenv": "^10.0.0"
-  }
+  },
+  "devDependencies": {}
 }
