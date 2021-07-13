@@ -1,25 +1,9 @@
-require('dotenv').config();
-
 // Endpoint for receiving incoming events
 
 exports.event = async (req, res) => {
-  console.log(req.body);
-  // use this schema for validation later
-  const schema = req.body.schema;
-
-  const sensors = req.body.sensors;
-  const readings = sensors.map((sensor) => {
-    return {
-      type: sensor.type,
-      label: sensor.label,
-      reading: sensor.reading,
-      unit: sensor.UoM,
-      recorded_at: sensor.recorded_at,
-    };
-  });
-  console.log('Sensor readings: ', readings);
-
-  // Validate the data
+  require('dotenv').config();
+  // set default for status code
+  let statusCode = 200;
 
   // firestore init
   const Firestore = require('@google-cloud/firestore');
@@ -28,83 +12,91 @@ exports.event = async (req, res) => {
     keyFilename: './env/' + process.env.KEY_FILENAME,
   });
 
-  // Fetch relevant user
-  const username = req.body.username;
-  const usersRef = db.collection('users');
-  const queryRef = usersRef.where('username', '==', username);
+  // globals for server ts
+  const admin = require('firebase-admin');
+  const serverTime = admin.firestore.FieldValue.serverTimestamp();
 
-  const snapshot = await queryRef.get();
-  if (snapshot.empty) {
-    console.log('No matching user found');
-    // TODO: Insert the user
-
-    return;
+  // iterate over readings and store in user collection
+  async function updateReadings(readings, userDocID) {
+    const insertReading = async (reading) => {
+      return await db
+        .collection('users')
+        .doc(userDocID)
+        .collection('readings')
+        .doc()
+        .set(reading);
+    };
+    return Promise.all(
+      readings.map((reading) => {
+        insertReading(reading);
+        return Promise.resolve('ok');
+      }),
+    );
   }
 
-  console.log('Total results found: ', snapshot.size);
+  // use this schema for validation later
+  const schema = req.body.schema;
+  const schemaVersion = req.body.version;
+  const readings = req.body.readings.map((reading) => {
+    return {
+      schema: schema,
+      schema_version: schemaVersion,
+      server_created_at: serverTime,
+      ...reading,
+    };
+  });
+
+  // TODO: Validate the data
+
+  // Fetch relevant user
+  const username = req.body.username;
+  const queryRef = db.collection('users').where('username', '==', username);
+
+  const snapshot = await queryRef.get();
+  let userDocID = false;
+  if (snapshot.empty) {
+    // user not found, insert the new user
+    const newUserData = {
+      username: username,
+      device_name: req.body.device_name,
+      created_at: serverTime,
+    };
+    userRef = db.collection('users').doc();
+    await userRef.set(newUserData);
+    userDocID = userRef.id;
+
+    // change status code but don't return because
+    // we still have work to do
+    statusCode = 201;
+  }
+
   if (snapshot.size > 1) {
     // if more than 1, do something about it
     return res.status(500).send('Non-unique user. Something went wrong.');
   }
 
   snapshot.forEach((doc) => {
-    let userRef = doc.id;
-    console.log(doc.id, '=>', doc.data());
-
-    // try to get last readings
-    // remove this once verified it's working, only need for FE UI
-    async function getReadings(doc) {
-      const latest_readings = await db
-        .collection('users')
-        .doc(doc.id)
-        .collection('readings')
-        .get();
-      latest_readings.forEach((reading) => {
-        console.log('reading: ', reading.data());
-      });
-    }
-
-    getReadings(doc);
-
-    // Hand it off to queue / pubsub to get to ES
-
-    // And insert into latest readings
-    async function updateReadings(readings, userRef) {
-      console.log('Updating user readings', readings);
-
-      const insertReading = async (reading) => {
-        return await usersRef
-          .doc(userRef)
-          .collection('readings')
-          .doc()
-          .set(reading);
-      };
-      return Promise.all(
-        readings.map((reading) => {
-          console.log('Attempting to update reading: ', { reading });
-          insertReading(reading);
-          return Promise.resolve('ok');
-        }),
-      );
-    }
-
-    updateReadings(readings, userRef);
-
-    // Update the user...
-    async function updateUser(userRef) {
-      const admin = require('firebase-admin');
-      const FieldValue = admin.firestore.FieldValue;
-      const res = await userRef.update({
-        last_updated: FieldValue.serverTimestamp(),
-      });
-    }
-
-    const docRef = usersRef.doc(userRef);
-    updateUser(docRef);
+    // this loop looks weird but shouldn't ever be more than 1
+    userDocID = doc.id;
   });
 
-  // catch exceptions
+  // insert into latest readings
+  updateReadings(readings, userDocID);
+
+  // TODO: Hand it off to queue / pubsub to get to ES
+
+  // Update the user...
+  async function updateUser(docRef) {
+    const res = await docRef.update({
+      last_updated: serverTime,
+    });
+  }
+
+  const docRef = db.collection('users').doc(userDocID);
+  updateUser(docRef);
+
+  // TODO: catch exceptions and do something
 
   // return status
-  res.status(200).send('Hello!');
+  res.status(statusCode).send('Hello!');
 };

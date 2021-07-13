@@ -2,20 +2,22 @@
     "schema": "streaming_sensor",
     "version": "0.1",
     "device_time": "",
-    "user_name": "jason",
+    "username": "jason",
     "device_name": "jason's raspi",
-    "sensors": [
+    "readings": [
         {
             "type": "temperature",
             "label": "internal temp",
             "reading": "73.2",
-            "UoM": "F"
+            "UoM": "F",
+            "recorded_at": "1626131919"
         },
         {
             "type": "temperature",
             "label": "external temp",
             "reading": "225",
-            "UoM": "F"
+            "UoM": "F",
+            "recorded_at": "1626131919"
         }
     ],
     "session": {
