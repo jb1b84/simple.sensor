@@ -1,16 +1,16 @@
 // Endpoint for receiving incoming events
 
 exports.event = async (req, res) => {
-  require('dotenv').config();
+  // require('dotenv').config();
   // set default for status code
   let statusCode = 200;
 
   // firestore init
+  // TODO: use local env to add these back in
+  // keyFilename: './env/' + process.env.KEY_FILENAME,
+  // process.env.PROJECT_ID
   const Firestore = require('@google-cloud/firestore');
-  const db = new Firestore({
-    projectId: process.env.PROJECT_ID,
-    // keyFilename: './env/' + process.env.KEY_FILENAME,
-  });
+  const db = new Firestore();
 
   // globals for server ts
   const admin = require('firebase-admin');
