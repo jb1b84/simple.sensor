@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime
 import requests
@@ -83,7 +84,7 @@ def send_readings(readings, username, session_label, device_id="na"):
     }
 
     print("Sending readings... \n")
-    r = requests.post(endpoint, data=payload)
+    r = requests.post(endpoint, json=payload)
     print("Status: {} \n Response: {} \n".format(r.status_code, r.text))
 
 
@@ -94,7 +95,7 @@ def main_loop():
 
     while True:
         tempF = get_temp()
-        send_readings([tempF], username, session_label)
+        send_readings([tempF], username, session_label, device_id)
 
         time.sleep(5.0)
 
