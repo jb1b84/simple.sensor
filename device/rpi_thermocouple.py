@@ -82,9 +82,9 @@ def send_readings(readings, username, session_label, device_id="na"):
         }
     }
 
-    print(payload)
-
-    return
+    print("Sending readings... \n")
+    r = requests.post(endpoint, data=payload)
+    print("Status: {} \n Response: {} \n".format(r.status_code, r.text))
 
 
 def main_loop():
