@@ -9,7 +9,7 @@ exports.event = async (req, res) => {
   const Firestore = require('@google-cloud/firestore');
   const db = new Firestore({
     projectId: process.env.PROJECT_ID,
-    keyFilename: './env/' + process.env.KEY_FILENAME,
+    // keyFilename: './env/' + process.env.KEY_FILENAME,
   });
 
   // globals for server ts

@@ -3,6 +3,9 @@
 ## Back end
 - [x] User CRU
 - [x] Store readings in db
+- [ ] Secret management
+- [ ] Github deployment
+- [ ] Exception handling
 - [ ] Handoff to ES
 - [ ] Endpoint for retrieving readings
 
