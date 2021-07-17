@@ -1,20 +1,19 @@
 {
-  "name": "event",
+  "name": "recently",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx functions-framework --target=event"
+    "dev": "npx functions-framework --target=recently"
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@google-cloud/firestore": "^4.13.2",
+    "firebase-admin": "^9.11.0"
+  },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.9.0"
-  },
-  "dependencies": {
-    "@google-cloud/firestore": "^4.13.1",
-    "dotenv": "^10.0.0",
-    "firebase-admin": "^9.10.0"
   }
 }
