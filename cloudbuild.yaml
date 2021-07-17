@@ -1,0 +1,10 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - event
+  - --region=us-central1
+  - --source=./functions/event
+  - --trigger-http
