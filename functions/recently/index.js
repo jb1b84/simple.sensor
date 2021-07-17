@@ -5,8 +5,6 @@
  * @param {!express:Response} res HTTP response context.
  */
 
-require('dotenv').config();
-
 exports.recently = async (req, res) => {
   const Firestore = require('@google-cloud/firestore');
   const db = new Firestore();
