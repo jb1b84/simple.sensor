@@ -3,8 +3,8 @@
 ## Back end
 - [x] User CRU
 - [x] Store readings in db
-- [ ] Secret management
-- [ ] Github deployment
+- [~] Secret management / env file
+- [x] Github deployment
 - [ ] Exception handling
 - [ ] Handoff to ES
 - [ ] Endpoint for retrieving readings
@@ -16,7 +16,7 @@
 - [x] Single thermocouple
 - [ ] Script posts readings every N seconds
 - [ ] Github deployment
-- [ ] Script runs auto on device start
+- [ ] Use command line to add session label/description, init new session, ssh to start
 
 # v1
 - [ ] Cleaner deploy to RasPi
@@ -24,6 +24,8 @@
 - [ ] Material Design & Styled Components
 - [ ] Sharing code between serverless functions & refactor junk out
 - [ ] Refactor ES handoff out to pub/sub
+- [ ] Tag based deployment for device vs backend
+- [ ] Device runs automatically, move session settings to front end
 
 # vSomedayMaybe
 - [ ] tests :(
