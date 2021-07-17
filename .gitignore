@@ -1,5 +1,8 @@
 # Misc
 env/
+.venv
+*.code-workspace
+.vscode
 
 # Logs
 logs
