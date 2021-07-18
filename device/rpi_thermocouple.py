@@ -94,8 +94,11 @@ def main_loop():
         username, session_label))
 
     while True:
-        tempF = get_temp()
-        send_readings([tempF], username, session_label, device_id)
+        try:
+            tempF = get_temp()
+            send_readings([tempF], username, session_label, device_id)
+        except Exception as e:
+            print("An error occurred: {}".format(e))
 
         time.sleep(5.0)
 
