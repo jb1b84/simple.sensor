@@ -5,22 +5,23 @@
 - [x] Store readings in db
 - [~] Secret management / env file
 - [x] Github deployment
-- [ ] Exception handling
+- [x] Exception handling
 - [ ] Handoff to ES
-- [ ] Endpoint for retrieving readings
+- [x] Endpoint for retrieving readings
 
 ## Front end
-- [ ] Display recent readings for user
+- [x] Display recent readings for user
 
 ## Device
 - [x] Single thermocouple
-- [ ] Script posts readings every N seconds
+- [x] Script posts readings every N seconds
 - [ ] Github deployment
 - [ ] Use command line to add session label/description, init new session, ssh to start
 
 # v1
 - [ ] Cleaner deploy to RasPi
 - [ ] React front end
+- [ ] Batch posting of readings
 - [ ] Material Design & Styled Components
 - [ ] Sharing code between serverless functions & refactor junk out
 - [ ] Refactor ES handoff out to pub/sub
